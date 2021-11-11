@@ -1,12 +1,17 @@
 Заметки по CMake
 ================
 
-1. [Введение](#введение)
+1. [Введение](#введение):
+   [сборка существующего проекта](#сборка-существующего-проекта),
+   [шаблоны проектов](#шаблоны-проектов)
 1. [Опции и переменные](#опции-и-переменные)
+1. [pkg_check_modules()](#pkg_check_modules)
 1. [Кросс-компиляция](#кросс-компиляция)
 1. [Прочее](#прочее)
 
 # Введение
+
+### Сборка существующего проекта
 
 Собрать проект:
 1. Создать каталог для сборки:
@@ -44,6 +49,39 @@ $ ctest
 Примечания:
 1. Можно добавить переменную окружения `CTEST_OUTPUT_ON_FAILURE=1`.
 
+### Шаблоны проектов
+
+Корневой `CMakeLists.txt` для простейшего проекта с 1 исполняемым файлом `test`:
+```
+cmake_minimum_required(VERSION 3.10.0)
+
+project(test-executable)
+
+set(test_SOURCES
+  test.cpp
+)
+add_executable(test ${test_SOURCES})
+install(TARGETS test DESTINATION bin)
+```
+
+Корневой `CMakeLists.txt` для простейшего проекта с 1 библиотекой `libtest.so`:
+```
+cmake_minimum_required(VERSION 3.10.0)
+
+project(test-lib)
+
+set(test_SOURCES
+  test.cpp
+)
+add_library(test SHARED ${test_SOURCES})
+install(TARGETS test LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+set(test_PUBLIC_HEADERS
+  test.hpp
+)
+install(FILES ${test_PUBLIC_HEADERS} DESTINATION include/test)
+```
+
 # Опции и переменные
 
 Для управления ходом компиляции у нас есть опции и переменные.
@@ -80,6 +118,41 @@ set(⟨variable⟩ ⟨value⟩ CACHE ⟨type⟩ ⟨docstring⟩ [FORCE])
    `FORCE` в помощь.
 
 Также можно задать переменные в cmake-файле (при помощи `set()`) и указать на него при конфигурации: `-DCMAKE_TOOLCHAIN_FILE=⟨path⟩`.
+
+# pkg_check_modules()
+
+`pkg_check_modules()` подключает к проекту библиотеку (модуль pkg-config).
+Если это возможно, следует не дёргать `pkg_check_modules()`, а использовать определения библиотек от CMake (пакет `extra-cmake-modules`).
+
+Чтобы команда `pkg_check_modules()` стала доступной, надо подключить `PkgConfig`:
+```
+find_package(PkgConfig)
+```
+
+Подключить библиотеку:
+```
+pkg_check_modules(⟨prefix⟩ ⟨pkg-config module⟩)
+```
+Подключить библиотеку, без которой сборка невозможна:
+```
+pkg_check_modules(⟨prefix⟩ REQUIRED ⟨pkg-config module⟩)
+```
+Примечания:
+1. Будут созданы переменные `⟨prefix⟩_FOUND`, `⟨prefix⟩_VERSION`, `⟨prefix⟩_LDFLAGS`, `⟨prefix⟩_CFLAGS` и др.
+
+Пример:
+```
+pkg_check_modules(POPPLER_GLIB poppler-glib)
+message("POPPLER_GLIB_FOUND=${POPPLER_GLIB_FOUND}")
+message("POPPLER_GLIB_VERSION=${POPPLER_GLIB_VERSION}")
+```
+Вывод:
+```
+-- Checking for module 'poppler-glib'
+--   Found poppler-glib, version 20.09.0
+POPPLER_GLIB_FOUND=1
+POPPLER_GLIB_VERSION=20.09.0
+```
 
 # Кросс-компиляция
 
