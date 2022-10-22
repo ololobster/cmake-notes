@@ -83,17 +83,21 @@ install(FILES ${test_PUBLIC_HEADERS} DESTINATION include/test)
 
 ### Настройка цели
 
-Задать для цели (исполняемого файла или библиотеки) флаги компилиции:
+Задать флаги компилиции для цели `test` (исполняемого файла или библиотеки):
 ```
-target_compile_options(test PRIVATE -Werror)
+target_compile_options(test PRIVATE -Werror -I/usr/include/glib-2.0)
 ```
+Примечания:
+1. `target_compile_options()`, как и пр. функции ниже, не перезаписвает список флагов, а добавляет в конец новые значения, при этом дубли убираются.
 
-Задать для цели каталоги с заголовками:
+Задать каталоги с заголовками для цели `test`:
 ```
-target_include_directories(test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(test PRIVATE /usr/include/glib-2.0 /usr/include/librsvg-2.0)
 ```
+Примечания:
+1. `-I` не нужно.
 
-Задать для цели флаги линковки:
+Задать флаги линковки для цели `test`:
 ```
 target_link_libraries(test ${common_libs})
 ```
