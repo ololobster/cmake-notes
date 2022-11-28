@@ -50,35 +50,21 @@ $ ctest
 
 ### Примеры
 
-Корневой `CMakeLists.txt` для простейшего проекта с 1 исполняемым файлом `test`:
+`CMakeLists.txt` для простейшего проекта с 1 исполняемым файлом `test`:
 ```
 cmake_minimum_required(VERSION 3.10.0)
-
 project(test-executable)
-
-set(test_SOURCES
-  test.cpp
-)
-add_executable(test ${test_SOURCES})
+add_executable(test test.cpp)
 install(TARGETS test DESTINATION bin)
 ```
 
-Корневой `CMakeLists.txt` для простейшего проекта с 1 библиотекой `libtest.so`:
+`CMakeLists.txt` для простейшего проекта с 1 библиотекой `libtest.so`:
 ```
 cmake_minimum_required(VERSION 3.10.0)
-
 project(test-lib)
-
-set(test_SOURCES
-  test.cpp
-)
-add_library(test SHARED ${test_SOURCES})
+add_library(test SHARED test.cpp)
 install(TARGETS test LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-set(test_PUBLIC_HEADERS
-  test.hpp
-)
-install(FILES ${test_PUBLIC_HEADERS} DESTINATION include/test)
+install(FILES test.hpp DESTINATION include/test)
 ```
 
 ### Настройка цели
@@ -100,6 +86,14 @@ target_include_directories(test PRIVATE /usr/include/glib-2.0 /usr/include/librs
 Задать флаги линковки для цели `test`:
 ```
 target_link_libraries(test ${common_libs})
+```
+
+Вывести свойство `COMPILE_OPTIONS` цели `test`:
+```
+get_target_property(propval test COMPILE_OPTIONS)
+if(propval)
+    message("test.COMPILE_OPTIONS = ${propval}")
+endif()
 ```
 
 # Опции и переменные
