@@ -14,25 +14,13 @@
 
 ### Сборка существующего проекта
 
-Собрать проект:
-1. Создать каталог для сборки:
-   ```
-   $ mkdir build && cd build
-   ```
-1. Сконфигурировать:
-   ```
-   $ cmake ..
-   ```
-   Если всё прошло успешно, то теперь у нас есть `Makefile`.
-1. Скомпилировать:
-   ```
-   $ make
-   ```
-1. Установить:
-   ```
-   # make install
-   ```
-
+Сконфигурировать, скомпилировать и установить:
+```
+$ mkdir build && cd build
+$ cmake ..
+$ make
+# make install
+```
 Примечания:
 1. В любой непонятной ситуации ставить пакет `extra-cmake-modules`.
 1. При компиляции можно вывести обращения к компилятору со всеми аргументами, поможет переменная окружения `VERBOSE=defined`.
@@ -63,7 +51,7 @@ install(TARGETS test DESTINATION bin)
 cmake_minimum_required(VERSION 3.10.0)
 project(test-lib)
 add_library(test SHARED test.cpp)
-install(TARGETS test LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS test LIBRARY DESTINATION lib)
 install(FILES test.hpp DESTINATION include/test)
 ```
 
