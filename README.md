@@ -55,6 +55,15 @@ install(TARGETS test LIBRARY DESTINATION lib)
 install(FILES test.hpp DESTINATION include/test)
 ```
 
+Стандартные пути Linux есть в модуле `GNUInstallDirs`:
+- `CMAKE_INSTALL_BINDIR` и `CMAKE_INSTALL_SBINDIR`;
+- `CMAKE_INSTALL_LIBDIR` — `/usr/lib`, `/usr/lib64` или др.;
+- `CMAKE_INSTALL_INCLUDEDIR` — `/usr/include`;
+- `CMAKE_INSTALL_SYSCONFDIR` — `/etc`;
+- `CMAKE_INSTALL_DATAROOTDIR` — `/usr/share`;
+- `CMAKE_INSTALL_MANDIR` — `/usr/share/man`;
+- `CMAKE_INSTALL_DOCDIR` — `/usr/share/doc/⟨project⟩`.
+
 ### Настройка цели
 
 Задать флаги компилиции для цели `test` (исполняемого файла или библиотеки):
